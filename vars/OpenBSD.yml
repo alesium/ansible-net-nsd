@@ -1,0 +1,6 @@
+# vim: noai:ts=2:sw=2:et:
+net_nsd_conf_file_dest: /var/nsd/etc/nsd.conf
+net_nsd_db_file_dir_dest: /var/nsd/zones
+net_nsd_user: _nsd
+net_nsd_group: _nsd
+net_nsd_packages: ""

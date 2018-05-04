@@ -1,0 +1,10 @@
+# vim: noai:ts=2:sw=2:et:
+---
+- name: enable nsd
+  service: name="{{ net_nsd_service_name }}" state="started" enabled="yes"
+
+- name: restart nsd
+  service: name="{{ net_nsd_service_name }}" state="restarted"
+
+- name: reload nsd
+  command: "{{ net_nsd_nsd_control }} reload"

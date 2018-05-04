@@ -1,0 +1,14 @@
+# vim: noai:ts=2:sw=2:et:
+net_nsd_conf_file_src: ../templates/nsd.conf.j2
+net_nsd_conf_file_dest: /etc/nsd
+net_nsd_db_file_dir_src: ../files/db/
+net_nsd_db_file_dir_dest: /var/db/nsd
+#net_nsd_pre_include:
+net_nsd_packages:
+  - nsd
+net_nsd_service_name: nsd
+net_nsd_user: nsd
+net_nsd_group: nsd
+#net_nsd_post_include:
+net_nsd_db_zones: [example.com]
+net_nsd_nsd_control: /usr/sbin/nsd-control

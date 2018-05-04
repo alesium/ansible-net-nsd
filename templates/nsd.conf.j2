@@ -1,0 +1,42 @@
+##  NSD authoritative only DNS
+## nsd.conf .:. https://calomel.org
+## Primary or "Master" NSD server
+## {{ ansible_managed }}
+
+server:
+  # uncomment to specify specific interfaces to bind (default all).
+  #  ip-address: 127.0.0.1
+
+  # port to answer queries on. default is 53.
+    port: 53
+
+  # Number of NSD servers to fork.
+    server-count: 1
+
+  # listen only on IPv4 connections
+    ip4-only: yes
+
+  # don't answer VERSION.BIND and VERSION.SERVER CHAOS class queries
+    hide-version: yes
+
+  # identify the server (CH TXT ID.SERVER entry).
+    identity: "NSD on {{ ansible_hostname }}"
+
+  # The directory for zonefile: files.
+    zonesdir: "{{ net_nsd_db_file_dirs_dest }}"
+
+key:
+   name: "sec_key"
+   algorithm: hmac-md5
+   secret: "6KM6qiKfwfEpamEq72HQdA=="
+
+{% for zone in net_nsd_db_zones %}
+zone:
+    name: {{ zone }}
+    zonefile: db.{{ zone }}
+{% endfor %}
+
+#
+## NSD authoritative only DNS
+## nsd.conf .:. https://calomel.org
+## Primary or "Master" NSD server

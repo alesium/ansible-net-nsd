@@ -1,0 +1,54 @@
+# vim: noai:ts=2:sw=2:et:
+---
+- name: include vars
+  include_vars: "../vars/{{ ansible_distribution }}.yml"
+  tags:
+    - net-nsd
+    - install
+
+- name: execute pre nsd install tasks
+  include_tasks: "{{ net_nsd_pre_include }}"
+  when: net_nsd_pre_include is defined
+  tags:
+    - net-nsd
+    - install
+
+- name: install required packages
+  package: name="{{ item }}" state="present"
+  ignore_errors: yes
+  notify: enable nsd
+  with_items: "{{ net_nsd_packages }}"
+  when: net_nsd_packages != ""
+  tags:
+    - net-nsd
+    - install
+
+- name: enable nsd
+  notify: enable nsd
+  debug: msg="enabling nsd on {{ ansible_distribution }}"
+  when: net_nsd_packages == ""
+  tags:
+    - net-nsd
+    - install
+
+- name: synchronize config file
+  template: src="{{ net_nsd_conf_file_src }}" dest="{{ net_nsd_conf_file_dest }}" mode="0644" owner="{{ net_nsd_user }}" group="{{ net_nsd_group }}"
+  notify: reload nsd
+  tags:
+    - net-nsd
+    - update
+
+- name: synchronize db files
+  copy: src="{{ net_nsd_db_file_dir_src }}/db.{{ item }}" dest="{{ net_nsd_db_file_dir_dest }}" mode="0644" owner="{{ net_nsd_user }}" group="{{ net_nsd_group }}"
+  notify: reload nsd
+  with_items: "{{ net_nsd_db_zones }}"
+  tags:
+    - net-nsd
+    - update
+
+- name: execute post nsd install tasks
+  include_tasks: "{{ net_nsd_post_include }}"
+  when: net_nsd_post_include is defined
+  tags:
+    - net-nsd
+    - update
